@@ -98,7 +98,7 @@ namespace TKCUSTOMERSERVICE
             try
             {
 
-                if (!string.IsNullOrEmpty(dateTimePicker1.Text.ToString()))
+                if (!string.IsNullOrEmpty(dateTimePicker1.Text.ToString())&&!string.IsNullOrEmpty(dateTimePicker2.Text.ToString()))
                 {
                     connectionString = ConfigurationManager.ConnectionStrings["dbconn"].ConnectionString;
                     sqlConn = new SqlConnection(connectionString);
@@ -106,8 +106,8 @@ namespace TKCUSTOMERSERVICE
                     sbSql.Clear();
                     sbSqlQuery.Clear();
 
-                    sbSqlQuery.AppendFormat("{0}", dateTimePicker1.Value.ToString("yyyyMMdd"));
-                    sbSql.AppendFormat(@"SELECT [ID] AS '編號',[CallDate]  AS '來電日',[CallTime]  AS '來電時間',[TypeName] AS '類別',[CallName] AS '來電名稱',[CallPhone] AS '來電電話',[OrderID] AS '訂單',[ShipID] AS '出貨單',[InvoiceNo] AS '發票',[CallText] AS '問題',[CallTextRe] AS '回覆' FROM [{0}].[dbo].[CALLRECORD],[{1}].[dbo].[BASETYPE]   WHERE CALLRECORD.TypeID=BASETYPE.TypeID AND CallDate='{2}'  ", sqlConn.Database.ToString(), sqlConn.Database.ToString(), sbSqlQuery.ToString());
+                    sbSqlQuery.AppendFormat("AND CallDate>='{0}' AND  CallDate<='{1}'", dateTimePicker1.Value.ToString("yyyyMMdd"), dateTimePicker2.Value.ToString("yyyyMMdd"));
+                    sbSql.AppendFormat(@"SELECT [ID] AS '編號',[CallDate]  AS '來電日',[CallTime]  AS '來電時間',[TypeName] AS '類別',[CallName] AS '來電名稱',[CallPhone] AS '來電電話',[OrderID] AS '訂單',[ShipID] AS '出貨單',[InvoiceNo] AS '發票',[CallText] AS '問題',[CallTextRe] AS '回覆' FROM [{0}].[dbo].[CALLRECORD],[{1}].[dbo].[BASETYPE]   WHERE CALLRECORD.TypeID=BASETYPE.TypeID {2}  ", sqlConn.Database.ToString(), sqlConn.Database.ToString(), sbSqlQuery.ToString());
 
                     adapter = new SqlDataAdapter(@"" + sbSql, sqlConn);
                     sqlCmdBuilder = new SqlCommandBuilder(adapter);
