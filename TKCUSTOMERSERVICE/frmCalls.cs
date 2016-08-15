@@ -29,6 +29,7 @@ namespace TKCUSTOMERSERVICE
         OpenFileDialog file = new OpenFileDialog();
         int result;
         string NowDay;
+        int rownum = 0;
 
         public class CallsRecord
         {
@@ -127,6 +128,10 @@ namespace TKCUSTOMERSERVICE
                     {                        
                         dataGridView1.DataSource = ds.Tables["TEMPds"];
                         dataGridView1.AutoResizeColumns();
+                        rownum = ds.Tables["TEMPds"].Rows.Count - 1;
+                        dataGridView1.CurrentCell = dataGridView1.Rows[rownum].Cells[0];
+                        textBox5.Text = dataGridView1.Rows[dataGridView1.CurrentRow.Index].Cells[0].Value.ToString();
+                        //dataGridView1.CurrentCell = dataGridView1[0, 2];
 
                     }
                 }
@@ -150,7 +155,9 @@ namespace TKCUSTOMERSERVICE
         }
 
         public void ADDtoDB()
-        {     
+        {
+
+
             list_CallsRecord.Clear();
             list_CallsRecord.Add(new CallsRecord() { ID = textBox5.Text.ToString(), CallDate= DateTime.Now.ToString("yyyyMMdd"), CallTime= DateTime.Now.ToString("HH:mm:ss"), TypeID= comboBox1.SelectedValue.ToString(), CallName= textBox1.Text.ToString(), CallPhone= textBox2.Text.ToString(),OrderID=textBox6.Text.ToString() ,ShipID = textBox7.Text.ToString(), InvoiceNo=textBox8.Text.ToString(), CallText= textBox3.Text.ToString(), CallTextRe= textBox4.Text.ToString() });
 
@@ -188,7 +195,17 @@ namespace TKCUSTOMERSERVICE
 
                 sqlConn.Close();
 
+                rownum = dataGridView1.RowCount;
+
                 Search();
+
+                textBox1.Clear();
+                textBox2.Clear();
+                textBox3.Clear();
+                textBox4.Clear();
+                textBox6.Clear();
+                textBox7.Clear();
+                textBox8.Clear();
             }
             catch
             {
@@ -254,10 +271,21 @@ namespace TKCUSTOMERSERVICE
             }
         }
 
+        public void ClearText()
+        {
+            textBox1.Clear();
+            textBox2.Clear();
+            textBox3.Clear();
+            textBox4.Clear();
+            textBox6.Clear();
+            textBox7.Clear();
+            textBox8.Clear();
+        }
         public void DelDB()
         {
             try
             {
+               textBox5.Text= dataGridView1.Rows[dataGridView1.CurrentRow.Index].Cells[0].Value.ToString();
                 DialogResult dialogResult = MessageBox.Show("是否真的要刪除", "del?", MessageBoxButtons.YesNo);
                 if (dialogResult == DialogResult.Yes)
                 {
@@ -327,11 +355,15 @@ namespace TKCUSTOMERSERVICE
         {
             DelDB();
         }
+        private void button5_Click(object sender, EventArgs e)
+        {
+            ClearText();
+        }
 
 
 
         #endregion
 
-       
+
     }
 }
